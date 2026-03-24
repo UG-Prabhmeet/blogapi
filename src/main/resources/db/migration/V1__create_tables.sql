@@ -1,0 +1,18 @@
+CREATE TABLE users (
+   id BIGSERIAL PRIMARY KEY,
+   name VARCHAR(100) NOT NULL,
+   email VARCHAR(150) NOT NULL UNIQUE
+);
+
+CREATE TABLE posts (
+   id BIGSERIAL PRIMARY KEY,
+   title VARCHAR(255) NOT NULL,
+   content TEXT,
+   user_id BIGINT NOT NULL REFERENCES users(id)
+);
+
+CREATE TABLE comments (
+  id BIGSERIAL PRIMARY KEY,
+  body TEXT NOT NULL,
+  post_id BIGINT NOT NULL REFERENCES posts(id)
+);
