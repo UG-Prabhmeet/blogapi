@@ -1,10 +1,11 @@
 package com.learns.blogapi.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
+import java.lang.annotation.Native;
 import java.util.List;
 
 @Entity
@@ -15,22 +16,20 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id ;
 
+    @NotBlank(message = "Title is required")
     private String title ;
+
+    @NotBlank(message = "Content is required")
     private String content ;
 
     // many posts → one user (owner of relationship)
     @ManyToOne
     @JoinColumn(name = "user_id") // foreign key in posts table
-    @JsonBackReference
-    // prevents infinite recursion (back side of User ↔ Post)
-
     private User user;
 
     // one post → many comments
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    // mappedBy = "post" → refers to field in Comment entity
-
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  
     @JsonManagedReference
-    // forward side of Post ↔ Comment (included in JSON)
     private List<Comment> comments ;
 }

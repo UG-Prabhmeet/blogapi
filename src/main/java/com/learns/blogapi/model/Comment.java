@@ -2,6 +2,7 @@ package com.learns.blogapi.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Entity
@@ -12,14 +13,12 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Comment body is required")
     private String body;
 
-    // many comments → one post (owner of relationship)
+    // Many comments → one post (owner of relationship)
     @ManyToOne
     @JoinColumn(name = "post_id") // foreign key in comments table
-
     @JsonBackReference
-    // back side of Post ↔ Comment (prevents infinite JSON recursion)
-
     private Post post;
 }

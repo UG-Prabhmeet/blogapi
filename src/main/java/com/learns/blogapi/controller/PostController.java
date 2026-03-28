@@ -2,12 +2,13 @@ package com.learns.blogapi.controller;
 
 import com.learns.blogapi.model.Post;
 import com.learns.blogapi.service.PostService;
-import org.hibernate.engine.spi.Resolution;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public class PostController {
     // /api/posts?sort=title,asc&sort=createdAt,desc → sorted by title ascending, then by createdAt descending
 
     @GetMapping
-    public Page<Post>getAllPosts(@PageableDefault(size=5)Pageable pageable) {
+    public Page<Post> getAllPosts(@PageableDefault(size = 5) @NonNull Pageable pageable) {
         return postService.getAllPosts(pageable);
     }
 
@@ -53,14 +54,18 @@ public class PostController {
     }
 
     @PostMapping
-    // POST /api/posts?userId=1 → create a post for a user
-    public ResponseEntity<Post> createPost(@RequestParam Long userId , @RequestBody Post post) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(postService.createPost(userId ,post));
+    // POST /api/posts → create a post for the currently authenticated user
+    public ResponseEntity<Post> createPost(@RequestBody Post post, java.security.Principal principal) {
+        String email = principal.getName();
+        return ResponseEntity.status(HttpStatus.CREATED).body(postService.createPostByEmail(email, post));
     }
 
+    // Only ADMIN can delete any post
+    // Regular users cannot delete posts via this endpoint
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deletePost(@PathVariable Long id) {
         postService.deletePost(id);
-        return ResponseEntity.noContent().build() ;
+        return ResponseEntity.noContent().build();
     }
 }

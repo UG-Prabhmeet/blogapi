@@ -4,7 +4,6 @@ import com.learns.blogapi.model.User;
 import com.learns.blogapi.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 

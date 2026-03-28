@@ -1,8 +1,8 @@
 package com.learns.blogapi.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
@@ -17,12 +17,17 @@ public class User {
 
     private String name ;
     private String email ;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String password ;
+
+    // @Enumerated stores the enum as a string ("USER" or "ADMIN")
+    // without this, JPA stores it as a number (0 or 1) which is hard to read
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     // one user → many posts (bidirectional relationship)
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    // mappedBy = "user" → refers to 'user' field in Post entity (owns relation)
-
-    @JsonManagedReference
-    // prevents infinite JSON recursion (forward side of relation)
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    // prevents infinite JSON recursion by ignoring posts when serializing User
     private List<Post> posts ;
 }

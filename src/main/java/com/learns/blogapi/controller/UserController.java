@@ -2,7 +2,6 @@ package com.learns.blogapi.controller;
 
 import com.learns.blogapi.model.User;
 import com.learns.blogapi.service.UserService;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
