@@ -47,6 +47,13 @@ public class PostService {
         return postRepository.save(post);
     }
 
+    public Post createPostByEmail(String email, Post post) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found: " + email));
+        post.setUser(user);
+        return postRepository.save(post);
+    }
+
     public void deletePost(Long id) {
         postRepository.deleteById(id);
     }

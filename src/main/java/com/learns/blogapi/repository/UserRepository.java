@@ -3,8 +3,7 @@ package com.learns.blogapi.repository;
 import com.learns.blogapi.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-// JPA: Java Persistence API
-// format: JpaRepository<Entity, PrimaryKeyType>
+import java.util.Optional;
 
 // WHY DO WE NEED REPOSITORIES?
 
@@ -27,7 +26,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 // 6. You get List<User> in your code
 
+// JPA: Java Persistence API
+// format: JpaRepository<Entity, PrimaryKeyType>
 public interface UserRepository extends JpaRepository<User, Long> {
     // checking if user already exists by an email
     boolean existsByEmail(String email);
+
+    Optional<User> findByEmail(String email);
 }
